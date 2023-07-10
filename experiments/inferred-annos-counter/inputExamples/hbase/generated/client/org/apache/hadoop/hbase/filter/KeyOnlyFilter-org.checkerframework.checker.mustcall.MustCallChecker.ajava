@@ -1,0 +1,434 @@
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.hadoop.hbase.filter;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import org.apache.hadoop.hbase.ByteBufferExtendedCell;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.HConstants;
+import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.KeyValueUtil;
+import org.apache.hadoop.hbase.Tag;
+import org.apache.hadoop.hbase.exceptions.DeserializationException;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.hbase.util.ClassSize;
+import org.apache.yetus.audience.InterfaceAudience;
+import org.apache.hbase.thirdparty.com.google.common.base.Preconditions;
+import org.apache.hbase.thirdparty.com.google.protobuf.InvalidProtocolBufferException;
+import org.apache.hadoop.hbase.shaded.protobuf.generated.FilterProtos;
+
+/**
+ * A filter that will only return the key component of each KV (the value will
+ * be rewritten as empty).
+ * <p>
+ * This filter can be used to grab all of the keys without having to also grab
+ * the values.
+ */
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.mustcall.MustCallChecker")
+public class KeyOnlyFilter extends FilterBase {
+
+    boolean lenAsVal;
+
+    public KeyOnlyFilter() {
+        this(false);
+    }
+
+    public KeyOnlyFilter(boolean lenAsVal) {
+        this.lenAsVal = lenAsVal;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean filterRowKey(Cell cell) throws IOException {
+        // Impl in FilterBase might do unnecessary copy for Off heap backed Cells.
+        return false;
+    }
+
+    public Cell transformCell(Cell cell) {
+        return createKeyOnlyCell(cell);
+    }
+
+    private Cell createKeyOnlyCell(Cell c) {
+        if (c instanceof ByteBufferExtendedCell) {
+            return new KeyOnlyByteBufferExtendedCell((ByteBufferExtendedCell) c, lenAsVal);
+        } else {
+            return new KeyOnlyCell(c, lenAsVal);
+        }
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public ReturnCode filterCell(final Cell ignored) throws IOException {
+        return ReturnCode.INCLUDE;
+    }
+
+    public static Filter createFilterFromArguments(ArrayList<byte[]> filterArguments) {
+        Preconditions.checkArgument((filterArguments.isEmpty() || filterArguments.size() == 1), "Expected: 0 or 1 but got: %s", filterArguments.size());
+        KeyOnlyFilter filter = new KeyOnlyFilter();
+        if (filterArguments.size() == 1) {
+            filter.lenAsVal = ParseFilter.convertByteArrayToBoolean(filterArguments.get(0));
+        }
+        return filter;
+    }
+
+    /**
+     * @return The filter serialized using pb
+     */
+    public byte[] toByteArray() {
+        FilterProtos.KeyOnlyFilter.Builder builder = FilterProtos.KeyOnlyFilter.newBuilder();
+        builder.setLenAsVal(this.lenAsVal);
+        return builder.build().toByteArray();
+    }
+
+    /**
+     * @param pbBytes A pb serialized {@link KeyOnlyFilter} instance
+     * @return An instance of {@link KeyOnlyFilter} made from <code>bytes</code>
+     * @throws DeserializationException
+     * @see #toByteArray
+     */
+    public static KeyOnlyFilter parseFrom(final byte[] pbBytes) throws DeserializationException {
+        FilterProtos.KeyOnlyFilter proto;
+        try {
+            proto = FilterProtos.KeyOnlyFilter.parseFrom(pbBytes);
+        } catch (InvalidProtocolBufferException e) {
+            throw new DeserializationException(e);
+        }
+        return new KeyOnlyFilter(proto.getLenAsVal());
+    }
+
+    /**
+     * @param o the other filter to compare with
+     * @return true if and only if the fields of the filter that are serialized
+     * are equal to the corresponding fields in other.  Used for testing.
+     */
+    @org.checkerframework.dataflow.qual.Pure
+    boolean areSerializedFieldsEqual(Filter o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof KeyOnlyFilter))
+            return false;
+        KeyOnlyFilter other = (KeyOnlyFilter) o;
+        return this.lenAsVal == other.lenAsVal;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean equals(Object obj) {
+        return obj instanceof Filter && areSerializedFieldsEqual((Filter) obj);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int hashCode() {
+        return Objects.hash(this.lenAsVal);
+    }
+
+    static class KeyOnlyCell implements Cell {
+
+        private Cell cell;
+
+        private int keyLen;
+
+        private boolean lenAsVal;
+
+        public KeyOnlyCell(Cell c, boolean lenAsVal) {
+            this.cell = c;
+            this.lenAsVal = lenAsVal;
+            this.keyLen = KeyValueUtil.keyLength(c);
+        }
+
+        public byte[] getRowArray() {
+            return cell.getRowArray();
+        }
+
+        public int getRowOffset() {
+            return cell.getRowOffset();
+        }
+
+        public short getRowLength() {
+            return cell.getRowLength();
+        }
+
+        public byte[] getFamilyArray() {
+            return cell.getFamilyArray();
+        }
+
+        public int getFamilyOffset() {
+            return cell.getFamilyOffset();
+        }
+
+        public byte getFamilyLength() {
+            return cell.getFamilyLength();
+        }
+
+        public byte[] getQualifierArray() {
+            return cell.getQualifierArray();
+        }
+
+        public int getQualifierOffset() {
+            return cell.getQualifierOffset();
+        }
+
+        public int getQualifierLength() {
+            return cell.getQualifierLength();
+        }
+
+        public long getTimestamp() {
+            return cell.getTimestamp();
+        }
+
+        public byte getTypeByte() {
+            return cell.getTypeByte();
+        }
+
+        public Type getType() {
+            return cell.getType();
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public long getSequenceId() {
+            return 0;
+        }
+
+        public byte[] getValueArray() {
+            if (lenAsVal) {
+                return Bytes.toBytes(cell.getValueLength());
+            } else {
+                return HConstants.EMPTY_BYTE_ARRAY;
+            }
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getValueOffset() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getValueLength() {
+            if (lenAsVal) {
+                return Bytes.SIZEOF_INT;
+            } else {
+                return 0;
+            }
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getSerializedSize() {
+            return KeyValue.KEYVALUE_INFRASTRUCTURE_SIZE + keyLen + getValueLength();
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public byte[] getTagsArray() {
+            return HConstants.EMPTY_BYTE_ARRAY;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getTagsOffset() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getTagsLength() {
+            return 0;
+        }
+
+        public long heapSize() {
+            return cell.heapSize();
+        }
+    }
+
+    static class KeyOnlyByteBufferExtendedCell extends ByteBufferExtendedCell {
+
+        public static final int FIXED_OVERHEAD = ClassSize.OBJECT + ClassSize.REFERENCE + Bytes.SIZEOF_BOOLEAN;
+
+        private ByteBufferExtendedCell cell;
+
+        private boolean lenAsVal;
+
+        public KeyOnlyByteBufferExtendedCell(ByteBufferExtendedCell c, boolean lenAsVal) {
+            this.cell = c;
+            this.lenAsVal = lenAsVal;
+        }
+
+        public byte[] getRowArray() {
+            return cell.getRowArray();
+        }
+
+        public int getRowOffset() {
+            return cell.getRowOffset();
+        }
+
+        public short getRowLength() {
+            return cell.getRowLength();
+        }
+
+        public byte[] getFamilyArray() {
+            return cell.getFamilyArray();
+        }
+
+        public int getFamilyOffset() {
+            return cell.getFamilyOffset();
+        }
+
+        public byte getFamilyLength() {
+            return cell.getFamilyLength();
+        }
+
+        public byte[] getQualifierArray() {
+            return cell.getQualifierArray();
+        }
+
+        public int getQualifierOffset() {
+            return cell.getQualifierOffset();
+        }
+
+        public int getQualifierLength() {
+            return cell.getQualifierLength();
+        }
+
+        public long getTimestamp() {
+            return cell.getTimestamp();
+        }
+
+        public byte getTypeByte() {
+            return cell.getTypeByte();
+        }
+
+        public void setSequenceId(long seqId) throws IOException {
+            cell.setSequenceId(seqId);
+        }
+
+        public void setTimestamp(long ts) throws IOException {
+            cell.setTimestamp(ts);
+        }
+
+        public void setTimestamp(byte[] ts) throws IOException {
+            cell.setTimestamp(ts);
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public long getSequenceId() {
+            return 0;
+        }
+
+        public Type getType() {
+            return cell.getType();
+        }
+
+        public byte[] getValueArray() {
+            if (lenAsVal) {
+                return Bytes.toBytes(cell.getValueLength());
+            } else {
+                return HConstants.EMPTY_BYTE_ARRAY;
+            }
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getValueOffset() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getValueLength() {
+            if (lenAsVal) {
+                return Bytes.SIZEOF_INT;
+            } else {
+                return 0;
+            }
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public byte[] getTagsArray() {
+            return HConstants.EMPTY_BYTE_ARRAY;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getTagsOffset() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getTagsLength() {
+            return 0;
+        }
+
+        public ByteBuffer getRowByteBuffer() {
+            return cell.getRowByteBuffer();
+        }
+
+        public int getRowPosition() {
+            return cell.getRowPosition();
+        }
+
+        public ByteBuffer getFamilyByteBuffer() {
+            return cell.getFamilyByteBuffer();
+        }
+
+        public int getFamilyPosition() {
+            return cell.getFamilyPosition();
+        }
+
+        public ByteBuffer getQualifierByteBuffer() {
+            return cell.getQualifierByteBuffer();
+        }
+
+        public int getQualifierPosition() {
+            return cell.getQualifierPosition();
+        }
+
+        public ByteBuffer getValueByteBuffer() {
+            if (lenAsVal) {
+                return ByteBuffer.wrap(Bytes.toBytes(cell.getValueLength()));
+            } else {
+                return HConstants.EMPTY_BYTE_BUFFER;
+            }
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getValuePosition() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public ByteBuffer getTagsByteBuffer() {
+            return HConstants.EMPTY_BYTE_BUFFER;
+        }
+
+        @org.checkerframework.dataflow.qual.Pure
+        public int getTagsPosition() {
+            return 0;
+        }
+
+        @org.checkerframework.dataflow.qual.SideEffectFree
+        public Iterator<Tag> getTags() {
+            return Collections.emptyIterator();
+        }
+
+        @org.checkerframework.dataflow.qual.SideEffectFree
+        public Optional<Tag> getTag(byte type) {
+            return Optional.empty();
+        }
+
+        public long heapSize() {
+            return ClassSize.align(FIXED_OVERHEAD + cell.heapSize());
+        }
+    }
+}

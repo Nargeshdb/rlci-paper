@@ -1,0 +1,126 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.hadoop.hbase.ipc;
+
+import org.apache.hbase.thirdparty.com.google.protobuf.RpcCallback;
+import java.io.IOException;
+import org.apache.hadoop.hbase.CellScanner;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.yetus.audience.InterfaceAudience;
+
+/**
+ * Simple delegating controller for use with the {@link RpcControllerFactory} to help override
+ * standard behavior of a {@link HBaseRpcController}. Used testing.
+ */
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.mustcall.MustCallChecker")
+public class DelegatingHBaseRpcController implements HBaseRpcController {
+
+    private final HBaseRpcController delegate;
+
+    public DelegatingHBaseRpcController(HBaseRpcController delegate) {
+        this.delegate = delegate;
+    }
+
+    public void reset() {
+        delegate.reset();
+    }
+
+    public boolean failed() {
+        return delegate.failed();
+    }
+
+    public String errorText() {
+        return delegate.errorText();
+    }
+
+    public void startCancel() {
+        delegate.startCancel();
+    }
+
+    public void setFailed(String reason) {
+        delegate.setFailed(reason);
+    }
+
+    public boolean isCanceled() {
+        return delegate.isCanceled();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void notifyOnCancel(RpcCallback<Object> callback) {
+        delegate.notifyOnCancel(callback);
+    }
+
+    public CellScanner cellScanner() {
+        return delegate.cellScanner();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setCellScanner(CellScanner cellScanner) {
+        delegate.setCellScanner(cellScanner);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setPriority(int priority) {
+        delegate.setPriority(priority);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setPriority(TableName tn) {
+        delegate.setPriority(tn);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getPriority() {
+        return delegate.getPriority();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getCallTimeout() {
+        return delegate.getCallTimeout();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setCallTimeout(int callTimeout) {
+        delegate.setCallTimeout(callTimeout);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean hasCallTimeout() {
+        return delegate.hasCallTimeout();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setFailed(IOException e) {
+        delegate.setFailed(e);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public IOException getFailed() {
+        return delegate.getFailed();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setDone(CellScanner cellScanner) {
+        delegate.setDone(cellScanner);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void notifyOnCancel(RpcCallback<Object> callback, CancellationCallback action) throws IOException {
+        delegate.notifyOnCancel(callback, action);
+    }
+}

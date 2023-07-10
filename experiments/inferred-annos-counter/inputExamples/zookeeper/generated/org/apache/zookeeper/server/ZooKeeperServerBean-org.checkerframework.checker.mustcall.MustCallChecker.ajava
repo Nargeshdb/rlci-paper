@@ -1,0 +1,428 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.zookeeper.server;
+
+import java.util.Date;
+import org.apache.jute.BinaryInputArchive;
+import org.apache.zookeeper.Version;
+import org.apache.zookeeper.jmx.ZKMBeanInfo;
+import org.apache.zookeeper.server.quorum.CommitProcessor;
+
+/**
+ * This class implements the ZooKeeper server MBean interface.
+ */
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.mustcall.MustCallChecker")
+public class ZooKeeperServerBean implements ZooKeeperServerMXBean, ZKMBeanInfo {
+
+    private final Date startTime;
+
+    private final String name;
+
+    protected final ZooKeeperServer zks;
+
+    public ZooKeeperServerBean(ZooKeeperServer zks) {
+        startTime = new Date();
+        this.zks = zks;
+        name = "StandaloneServer_port" + zks.getClientPort();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public String getClientPort() {
+        return Integer.toString(zks.getClientPort());
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public String getName() {
+        return name;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean isHidden() {
+        return false;
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public String getStartTime() {
+        return startTime.toString();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public String getVersion() {
+        return Version.getFullVersion();
+    }
+
+    public double getAvgRequestLatency() {
+        return zks.serverStats().getAvgLatency();
+    }
+
+    public long getMaxRequestLatency() {
+        return zks.serverStats().getMaxLatency();
+    }
+
+    public long getMinRequestLatency() {
+        return zks.serverStats().getMinLatency();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getOutstandingRequests() {
+        return zks.serverStats().getOutstandingRequests();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getTickTime() {
+        return zks.getTickTime();
+    }
+
+    public void setTickTime(int tickTime) {
+        zks.setTickTime(tickTime);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxClientCnxnsPerHost() {
+        return zks.getMaxClientCnxnsPerHost();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setMaxClientCnxnsPerHost(int max) {
+        if (zks.serverCnxnFactory != null) {
+            zks.serverCnxnFactory.setMaxClientCnxnsPerHost(max);
+        }
+        if (zks.secureServerCnxnFactory != null) {
+            zks.secureServerCnxnFactory.setMaxClientCnxnsPerHost(max);
+        }
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMinSessionTimeout() {
+        return zks.getMinSessionTimeout();
+    }
+
+    public void setMinSessionTimeout(int min) {
+        zks.setMinSessionTimeout(min);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxSessionTimeout() {
+        return zks.getMaxSessionTimeout();
+    }
+
+    public void setMaxSessionTimeout(int max) {
+        zks.setMaxSessionTimeout(max);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getDataDirSize() {
+        return zks.getDataDirSize();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getLogDirSize() {
+        return zks.getLogDirSize();
+    }
+
+    public long getPacketsReceived() {
+        return zks.serverStats().getPacketsReceived();
+    }
+
+    public long getPacketsSent() {
+        return zks.serverStats().getPacketsSent();
+    }
+
+    public long getFsyncThresholdExceedCount() {
+        return zks.serverStats().getFsyncThresholdExceedCount();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void resetLatency() {
+        zks.serverStats().resetLatency();
+    }
+
+    public void resetMaxLatency() {
+        zks.serverStats().resetMaxLatency();
+    }
+
+    public void resetFsyncThresholdExceedCount() {
+        zks.serverStats().resetFsyncThresholdExceedCount();
+    }
+
+    public void resetStatistics() {
+        ServerStats serverStats = zks.serverStats();
+        serverStats.resetRequestCounters();
+        serverStats.resetLatency();
+        serverStats.resetFsyncThresholdExceedCount();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getNumAliveConnections() {
+        return zks.getNumAliveConnections();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public String getSecureClientPort() {
+        if (zks.secureServerCnxnFactory != null) {
+            return Integer.toString(zks.secureServerCnxnFactory.getLocalPort());
+        }
+        return "";
+    }
+
+    public String getSecureClientAddress() {
+        if (zks.secureServerCnxnFactory != null) {
+            return String.format("%s:%d", zks.secureServerCnxnFactory.getLocalAddress().getHostString(), zks.secureServerCnxnFactory.getLocalPort());
+        }
+        return "";
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getTxnLogElapsedSyncTime() {
+        return zks.getTxnLogElapsedSyncTime();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getJuteMaxBufferSize() {
+        return BinaryInputArchive.maxBuffer;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getLastClientResponseSize() {
+        return zks.serverStats().getClientResponseStats().getLastBufferSize();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMinClientResponseSize() {
+        return zks.serverStats().getClientResponseStats().getMinBufferSize();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxClientResponseSize() {
+        return zks.serverStats().getClientResponseStats().getMaxBufferSize();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getResponseCachingEnabled() {
+        return zks.isResponseCachingEnabled();
+    }
+
+    public void setResponseCachingEnabled(boolean isEnabled) {
+        zks.setResponseCachingEnabled(isEnabled);
+    }
+
+    // Connection throttling settings
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getConnectionMaxTokens() {
+        return zks.connThrottle().getMaxTokens();
+    }
+
+    public void setConnectionMaxTokens(int val) {
+        zks.connThrottle().setMaxTokens(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getConnectionTokenFillTime() {
+        return zks.connThrottle().getFillTime();
+    }
+
+    public void setConnectionTokenFillTime(int val) {
+        zks.connThrottle().setFillTime(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getConnectionTokenFillCount() {
+        return zks.connThrottle().getFillCount();
+    }
+
+    public void setConnectionTokenFillCount(int val) {
+        zks.connThrottle().setFillCount(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getConnectionFreezeTime() {
+        return zks.connThrottle().getFreezeTime();
+    }
+
+    public void setConnectionFreezeTime(int val) {
+        zks.connThrottle().setFreezeTime(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public double getConnectionDropIncrease() {
+        return zks.connThrottle().getDropIncrease();
+    }
+
+    public void setConnectionDropIncrease(double val) {
+        zks.connThrottle().setDropIncrease(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public double getConnectionDropDecrease() {
+        return zks.connThrottle().getDropDecrease();
+    }
+
+    public void setConnectionDropDecrease(double val) {
+        zks.connThrottle().setDropDecrease(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public double getConnectionDecreaseRatio() {
+        return zks.connThrottle().getDecreasePoint();
+    }
+
+    public void setConnectionDecreaseRatio(double val) {
+        zks.connThrottle().setDecreasePoint(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getCommitProcMaxReadBatchSize() {
+        return CommitProcessor.getMaxReadBatchSize();
+    }
+
+    public void setCommitProcMaxReadBatchSize(int size) {
+        CommitProcessor.setMaxReadBatchSize(size);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getCommitProcMaxCommitBatchSize() {
+        return CommitProcessor.getMaxCommitBatchSize();
+    }
+
+    public void setCommitProcMaxCommitBatchSize(int size) {
+        CommitProcessor.setMaxCommitBatchSize(size);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public long getFlushDelay() {
+        return zks.getFlushDelay();
+    }
+
+    public void setFlushDelay(long delay) {
+        ZooKeeperServer.setFlushDelay(delay);
+    }
+
+    // Request throttling settings
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getThrottledOpWaitTime() {
+        return ZooKeeperServer.getThrottledOpWaitTime();
+    }
+
+    public void setThrottledOpWaitTime(int val) {
+        ZooKeeperServer.setThrottledOpWaitTime(val);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getRequestThrottleLimit() {
+        return RequestThrottler.getMaxRequests();
+    }
+
+    public void setRequestThrottleLimit(int requests) {
+        RequestThrottler.setMaxRequests(requests);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getRequestThrottleStallTime() {
+        return RequestThrottler.getStallTime();
+    }
+
+    public void setRequestThrottleStallTime(int time) {
+        RequestThrottler.setStallTime(time);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getRequestThrottleDropStale() {
+        return RequestThrottler.getDropStaleRequests();
+    }
+
+    public void setRequestThrottleDropStale(boolean drop) {
+        RequestThrottler.setDropStaleRequests(drop);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public long getMaxWriteQueuePollTime() {
+        return zks.getMaxWriteQueuePollTime();
+    }
+
+    public void setMaxWriteQueuePollTime(long delay) {
+        ZooKeeperServer.setMaxWriteQueuePollTime(delay);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getRequestStaleLatencyCheck() {
+        return Request.getStaleLatencyCheck();
+    }
+
+    public void setRequestStaleLatencyCheck(boolean check) {
+        Request.setStaleLatencyCheck(check);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxBatchSize() {
+        return zks.getMaxBatchSize();
+    }
+
+    public void setMaxBatchSize(int size) {
+        ZooKeeperServer.setMaxBatchSize(size);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getRequestStaleConnectionCheck() {
+        return Request.getStaleConnectionCheck();
+    }
+
+    public void setRequestStaleConnectionCheck(boolean check) {
+        Request.setStaleConnectionCheck(check);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getLargeRequestMaxBytes() {
+        return zks.getLargeRequestMaxBytes();
+    }
+
+    public void setLargeRequestMaxBytes(int bytes) {
+        zks.setLargeRequestMaxBytes(bytes);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    @org.checkerframework.dataflow.qual.Pure
+    public int getLargeRequestThreshold() {
+        return zks.getLargeRequestThreshold();
+    }
+
+    public void setLargeRequestThreshold(int threshold) {
+        zks.setLargeRequestThreshold(threshold);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxCnxns() {
+        return ServerCnxnHelper.getMaxCnxns(zks.secureServerCnxnFactory, zks.serverCnxnFactory);
+    }
+}

@@ -1,0 +1,497 @@
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.hadoop.hbase.client;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.NavigableSet;
+import org.apache.hadoop.hbase.exceptions.DeserializationException;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.io.TimeRange;
+import org.apache.hadoop.hbase.security.access.Permission;
+import org.apache.hadoop.hbase.security.visibility.Authorizations;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.yetus.audience.InterfaceAudience;
+
+/**
+ * Immutable version of Scan
+ */
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.mustcall.MustCallChecker")
+public final class ImmutableScan extends Scan {
+
+    private final Scan delegateScan;
+
+    /**
+     * Create Immutable instance of Scan from given Scan object
+     *
+     * @param scan Copy all values from Scan
+     */
+    public ImmutableScan(Scan scan) {
+        this.delegateScan = scan;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan addFamily(byte[] family) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to addFamily");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan addColumn(byte[] family, byte[] qualifier) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to addColumn");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setTimeRange(long minStamp, long maxStamp) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setTimeRange");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setTimeStamp(long timestamp) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setTimeStamp");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setTimestamp(long timestamp) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setTimestamp");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setColumnFamilyTimeRange(byte[] cf, long minStamp, long maxStamp) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setColumnFamilyTimeRange");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan withStartRow(byte[] startRow) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to withStartRow");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan withStartRow(byte[] startRow, boolean inclusive) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to withStartRow");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan withStopRow(byte[] stopRow) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to withStopRow");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan withStopRow(byte[] stopRow, boolean inclusive) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to withStopRow");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setRowPrefixFilter(byte[] rowPrefix) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setRowPrefixFilter");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan readAllVersions() {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to readAllVersions");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan readVersions(int versions) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to readVersions");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setBatch(int batch) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setBatch");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setMaxResultsPerColumnFamily(int limit) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setMaxResultsPerColumnFamily");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setRowOffsetPerColumnFamily(int offset) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setRowOffsetPerColumnFamily");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setCaching(int caching) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setCaching");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setMaxResultSize(long maxResultSize) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setMaxResultSize");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setFilter(Filter filter) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setFilter");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setFamilyMap(Map<byte[], NavigableSet<byte[]>> familyMap) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setFamilyMap");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setCacheBlocks(boolean cacheBlocks) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setCacheBlocks");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setReversed(boolean reversed) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setReversed");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setAllowPartialResults(final boolean allowPartialResults) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setAllowPartialResults");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setLoadColumnFamiliesOnDemand(boolean value) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setLoadColumnFamiliesOnDemand");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setRaw(boolean raw) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setRaw");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setSmall(boolean small) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setSmall");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setAttribute(String name, byte[] value) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setAttribute");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setId(String id) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setId");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setAuthorizations(Authorizations authorizations) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setAuthorizations");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setACL(Map<String, Permission> perms) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setACL");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setACL(String user, Permission perms) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setACL");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setConsistency(Consistency consistency) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setConsistency");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setReplicaId(int id) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setReplicaId");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setIsolationLevel(IsolationLevel level) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setIsolationLevel");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setPriority(int priority) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setPriority");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setScanMetricsEnabled(final boolean enabled) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setScanMetricsEnabled");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setAsyncPrefetch(boolean asyncPrefetch) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setAsyncPrefetch");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setLimit(int limit) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setLimit");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setOneRowLimit() {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setOneRowLimit");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setReadType(ReadType readType) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setReadType");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    Scan setMvccReadPoint(long mvccReadPoint) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setMvccReadPoint");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    Scan resetMvccReadPoint() {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to resetMvccReadPoint");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Scan setNeedCursorResult(boolean needCursorResult) {
+        throw new UnsupportedOperationException("ImmutableScan does not allow access to setNeedCursorResult");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public long getMaxResultSize() {
+        return this.delegateScan.getMaxResultSize();
+    }
+
+    public Map<byte[], NavigableSet<byte[]>> getFamilyMap() {
+        return Collections.unmodifiableMap(this.delegateScan.getFamilyMap());
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int numFamilies() {
+        return this.delegateScan.numFamilies();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean hasFamilies() {
+        return this.delegateScan.hasFamilies();
+    }
+
+    public byte[][] getFamilies() {
+        final byte[][] families = this.delegateScan.getFamilies();
+        byte[][] cloneFamilies = new byte[families.length][];
+        for (int i = 0; i < families.length; i++) {
+            cloneFamilies[i] = Bytes.copy(families[i]);
+        }
+        return cloneFamilies;
+    }
+
+    public byte[] getStartRow() {
+        final byte[] startRow = this.delegateScan.getStartRow();
+        return Bytes.copy(startRow);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean includeStartRow() {
+        return this.delegateScan.includeStartRow();
+    }
+
+    public byte[] getStopRow() {
+        final byte[] stopRow = this.delegateScan.getStopRow();
+        return Bytes.copy(stopRow);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean includeStopRow() {
+        return this.delegateScan.includeStopRow();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxVersions() {
+        return this.delegateScan.getMaxVersions();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getBatch() {
+        return this.delegateScan.getBatch();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getMaxResultsPerColumnFamily() {
+        return this.delegateScan.getMaxResultsPerColumnFamily();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getRowOffsetPerColumnFamily() {
+        return this.delegateScan.getRowOffsetPerColumnFamily();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getCaching() {
+        return this.delegateScan.getCaching();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public TimeRange getTimeRange() {
+        return this.delegateScan.getTimeRange();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Filter getFilter() {
+        return this.delegateScan.getFilter();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean hasFilter() {
+        return this.delegateScan.hasFilter();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getCacheBlocks() {
+        return this.delegateScan.getCacheBlocks();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean isReversed() {
+        return this.delegateScan.isReversed();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean getAllowPartialResults() {
+        return this.delegateScan.getAllowPartialResults();
+    }
+
+    public byte[] getACL() {
+        final byte[] acl = this.delegateScan.getACL();
+        return Bytes.copy(acl);
+    }
+
+    public Map<String, Object> getFingerprint() {
+        return Collections.unmodifiableMap(this.delegateScan.getFingerprint());
+    }
+
+    public Map<String, Object> toMap(int maxCols) {
+        return Collections.unmodifiableMap(this.delegateScan.toMap(maxCols));
+    }
+
+    public boolean isRaw() {
+        return this.delegateScan.isRaw();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean isSmall() {
+        return this.delegateScan.isSmall();
+    }
+
+    public boolean isScanMetricsEnabled() {
+        return this.delegateScan.isScanMetricsEnabled();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Boolean isAsyncPrefetch() {
+        return this.delegateScan.isAsyncPrefetch();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getLimit() {
+        return this.delegateScan.getLimit();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public ReadType getReadType() {
+        return this.delegateScan.getReadType();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    long getMvccReadPoint() {
+        return this.delegateScan.getMvccReadPoint();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean isNeedCursorResult() {
+        return this.delegateScan.isNeedCursorResult();
+    }
+
+    public byte[] getAttribute(String name) {
+        final byte[] attribute = this.delegateScan.getAttribute(name);
+        return Bytes.copy(attribute);
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Consistency getConsistency() {
+        return this.delegateScan.getConsistency();
+    }
+
+    public long getAttributeSize() {
+        return this.delegateScan.getAttributeSize();
+    }
+
+    public Map<String, byte[]> getAttributesMap() {
+        return Collections.unmodifiableMap(this.delegateScan.getAttributesMap());
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public Boolean getLoadColumnFamiliesOnDemandValue() {
+        return this.delegateScan.getLoadColumnFamiliesOnDemandValue();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getPriority() {
+        return this.delegateScan.getPriority();
+    }
+
+    public Map<byte[], TimeRange> getColumnFamilyTimeRange() {
+        return Collections.unmodifiableMap(this.delegateScan.getColumnFamilyTimeRange());
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public int getReplicaId() {
+        return this.delegateScan.getReplicaId();
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public boolean doLoadColumnFamiliesOnDemand() {
+        return this.delegateScan.doLoadColumnFamiliesOnDemand();
+    }
+
+    public String getId() {
+        return this.delegateScan.getId();
+    }
+
+    public boolean isGetScan() {
+        return this.delegateScan.isGetScan();
+    }
+
+    public IsolationLevel getIsolationLevel() {
+        return this.delegateScan.getIsolationLevel();
+    }
+
+    public Authorizations getAuthorizations() throws DeserializationException {
+        return this.delegateScan.getAuthorizations();
+    }
+
+    public String toString(int maxCols) {
+        return this.delegateScan.toString(maxCols);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public String toString() {
+        return this.delegateScan.toString();
+    }
+
+    public Map<String, Object> toMap() {
+        return Collections.unmodifiableMap(this.delegateScan.toMap());
+    }
+
+    public String toJSON(int maxCols) throws IOException {
+        return this.delegateScan.toJSON(maxCols);
+    }
+
+    public String toJSON() throws IOException {
+        return this.delegateScan.toJSON();
+    }
+}

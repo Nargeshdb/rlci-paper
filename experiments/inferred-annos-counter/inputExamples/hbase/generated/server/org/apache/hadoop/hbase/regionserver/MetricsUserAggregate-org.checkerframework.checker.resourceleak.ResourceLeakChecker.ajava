@@ -1,0 +1,57 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.hadoop.hbase.regionserver;
+
+import org.apache.yetus.audience.InterfaceAudience;
+
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.resourceleak.ResourceLeakChecker")
+public interface MetricsUserAggregate {
+
+    /**
+     * @return return a singleton instance of MetricsUserAggregateSource or null in case of NoOp
+     */
+    @org.checkerframework.dataflow.qual.Pure
+    MetricsUserAggregateSource getSource();
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updatePut(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateDelete(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateGet(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateIncrement(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateAppend(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateReplay(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateScanTime(long t);
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateFilteredReadRequests();
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    void updateReadRequestCount();
+}

@@ -1,0 +1,396 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.hadoop.hbase.coprocessor;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.InetSocketAddress;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.yetus.audience.InterfaceAudience;
+
+/**
+ * Wraps a Configuration to make it read-only.
+ */
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.resourceleak.ResourceLeakChecker")
+class ReadOnlyConfiguration extends Configuration {
+
+    private final Configuration conf;
+
+    ReadOnlyConfiguration(final Configuration conf) {
+        this.conf = conf;
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setDeprecatedProperties() {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(String name) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(URL url) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(Path file) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(InputStream in) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(InputStream in, String name) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void addResource(Configuration conf) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public synchronized void reloadConfiguration() {
+        // This is a write operation. We need to allow it though because if any Configuration in
+        // current JVM context calls addDefaultResource, this forces a reload of all Configurations
+        // (all Configurations are 'registered' by the default constructor. Rather than turn
+        // somersaults, let this 'write' operation through.
+        this.conf.reloadConfiguration();
+    }
+
+    public String get(String name) {
+        return conf.get(name);
+    }
+
+    // Do not add @Override because it is not in Hadoop 2.6.5
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setAllowNullValueProperties(boolean val) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public String getTrimmed(String name) {
+        return conf.getTrimmed(name);
+    }
+
+    public String getTrimmed(String name, String defaultValue) {
+        return conf.getTrimmed(name, defaultValue);
+    }
+
+    public String getRaw(String name) {
+        return conf.getRaw(name);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void set(String name, String value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void set(String name, String value, String source) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public synchronized void unset(String name) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public synchronized void setIfUnset(String name, String value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public String get(String name, String defaultValue) {
+        return conf.get(name, defaultValue);
+    }
+
+    public int getInt(String name, int defaultValue) {
+        return conf.getInt(name, defaultValue);
+    }
+
+    public int[] getInts(String name) {
+        return conf.getInts(name);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setInt(String name, int value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public long getLong(String name, long defaultValue) {
+        return conf.getLong(name, defaultValue);
+    }
+
+    public long getLongBytes(String name, long defaultValue) {
+        return conf.getLongBytes(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setLong(String name, long value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public float getFloat(String name, float defaultValue) {
+        return conf.getFloat(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setFloat(String name, float value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public double getDouble(String name, double defaultValue) {
+        return conf.getDouble(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setDouble(String name, double value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public boolean getBoolean(String name, boolean defaultValue) {
+        return conf.getBoolean(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setBoolean(String name, boolean value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setBooleanIfUnset(String name, boolean value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public <T extends Enum<T>> void setEnum(String name, T value) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public <T extends Enum<T>> T getEnum(String name, T defaultValue) {
+        return conf.getEnum(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setTimeDuration(String name, long value, TimeUnit unit) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public long getTimeDuration(String name, long defaultValue, TimeUnit unit) {
+        return conf.getTimeDuration(name, defaultValue, unit);
+    }
+
+    public Pattern getPattern(String name, Pattern defaultValue) {
+        return conf.getPattern(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setPattern(String name, Pattern pattern) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public synchronized String[] getPropertySources(String name) {
+        return conf.getPropertySources(name);
+    }
+
+    public Configuration.IntegerRanges getRange(String name, String defaultValue) {
+        return conf.getRange(name, defaultValue);
+    }
+
+    public Collection<String> getStringCollection(String name) {
+        return conf.getStringCollection(name);
+    }
+
+    public String[] getStrings(String name) {
+        return conf.getStrings(name);
+    }
+
+    public String[] getStrings(String name, String... defaultValue) {
+        return conf.getStrings(name, defaultValue);
+    }
+
+    public Collection<String> getTrimmedStringCollection(String name) {
+        return conf.getTrimmedStringCollection(name);
+    }
+
+    public String[] getTrimmedStrings(String name) {
+        return conf.getTrimmedStrings(name);
+    }
+
+    public String[] getTrimmedStrings(String name, String... defaultValue) {
+        return conf.getTrimmedStrings(name, defaultValue);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setStrings(String name, String... values) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public char[] getPassword(String name) throws IOException {
+        return conf.getPassword(name);
+    }
+
+    public InetSocketAddress getSocketAddr(String hostProperty, String addressProperty, String defaultAddressValue, int defaultPort) {
+        return conf.getSocketAddr(hostProperty, addressProperty, defaultAddressValue, defaultPort);
+    }
+
+    public InetSocketAddress getSocketAddr(String name, String defaultAddress, int defaultPort) {
+        return conf.getSocketAddr(name, defaultAddress, defaultPort);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setSocketAddr(String name, InetSocketAddress addr) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public InetSocketAddress updateConnectAddr(String hostProperty, String addressProperty, String defaultAddressValue, InetSocketAddress addr) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    public InetSocketAddress updateConnectAddr(String name, InetSocketAddress addr) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public Class<?> getClassByName(String name) throws ClassNotFoundException {
+        return conf.getClassByName(name);
+    }
+
+    public Class<?> getClassByNameOrNull(String name) {
+        return conf.getClassByNameOrNull(name);
+    }
+
+    public Class<?>[] getClasses(String name, Class<?>... defaultValue) {
+        return conf.getClasses(name, defaultValue);
+    }
+
+    public Class<?> getClass(String name, Class<?> defaultValue) {
+        return conf.getClass(name, defaultValue);
+    }
+
+    public <U> Class<? extends U> getClass(String name, Class<? extends U> defaultValue, Class<U> xface) {
+        return conf.getClass(name, defaultValue, xface);
+    }
+
+    public <U> List<U> getInstances(String name, Class<U> xface) {
+        return conf.getInstances(name, xface);
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setClass(String name, Class<?> theClass, Class<?> xface) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public Path getLocalPath(String dirsProp, String path) throws IOException {
+        return conf.getLocalPath(dirsProp, path);
+    }
+
+    public File getFile(String dirsProp, String path) throws IOException {
+        return conf.getFile(dirsProp, path);
+    }
+
+    public URL getResource(String name) {
+        return conf.getResource(name);
+    }
+
+    public InputStream getConfResourceAsInputStream(String name) {
+        return conf.getConfResourceAsInputStream(name);
+    }
+
+    public Reader getConfResourceAsReader(String name) {
+        return conf.getConfResourceAsReader(name);
+    }
+
+    public Set<String> getFinalParameters() {
+        return conf.getFinalParameters();
+    }
+
+    public int size() {
+        return conf.size();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void clear() {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public Iterator<Map.Entry<String, String>> iterator() {
+        return conf.iterator();
+    }
+
+    public void writeXml(OutputStream out) throws IOException {
+        conf.writeXml(out);
+    }
+
+    public void writeXml(Writer out) throws IOException {
+        conf.writeXml(out);
+    }
+
+    public ClassLoader getClassLoader() {
+        return conf.getClassLoader();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void setClassLoader(ClassLoader classLoader) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public String toString() {
+        return conf.toString();
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public synchronized void setQuietMode(boolean quietmode) {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    public void readFields(DataInput in) throws IOException {
+        throw new UnsupportedOperationException("Read-only Configuration");
+    }
+
+    public void write(DataOutput out) throws IOException {
+        conf.write(out);
+    }
+
+    public Map<String, String> getValByRegex(String regex) {
+        return conf.getValByRegex(regex);
+    }
+}
