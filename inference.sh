@@ -1,19 +1,12 @@
 #!/bin/bash
 
-# CURDIR=$(pwd)
-# RESULTS="${CURDIR}/results"
-
-# if [ -d "${RESULTS}" ]; then
-#     rm -rf "${RESULTS}"
-# fi
-
-# mkdir "${RESULTS}"
-
 cd checker-framework
-git checkout oopsla-2023
+git checkout master
 git pull
 ./gradlew assemble
 export PATH=$CHECKERFRAMEWORK/checker/bin:${PATH}
+git checkout oopsla-2023
+git pull
 ./gradlew publishToMavenLocal
 cd ..
 
