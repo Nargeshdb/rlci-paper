@@ -1354,7 +1354,7 @@ public class QuorumCnxManager {
         final DataInputStream din;
         final SendWorker sw;
 
-        @MustCallAlias RecvWorker(@MustCallAlias Socket sock, DataInputStream din, Long sid, SendWorker sw) {
+        @Owning RecvWorker(@Owning Socket sock, DataInputStream din, Long sid, SendWorker sw) {
             super("RecvWorker:" + sid);
             this.sid = sid;
             this.sock = sock;
