@@ -5,17 +5,15 @@ sudo apt-get install -y openjdk-11-jdk && \
 sudo apt-get install -y ant && \
 sudo apt-get clean;
 
-export JAVA_HOME="/usr/lib/jvm/java-1.11.0-openjdk-amd64"
+cd checker-framework
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
-cd checker-framework
-git checkout oopsla-2023
-git pull
+echo $JAVA_HOME
+git checkout master
 ./gradlew assemble
-export PATH=$CHECKERFRAMEWORK/checker/bin:${PATH}
-# git checkout oopsla-2023
-# git pull
+git checkout oopsla-2023
 ./gradlew publishToMavenLocal
 cd ..
 
