@@ -5,7 +5,7 @@ sudo apt-get install -y openjdk-11-jdk && \
 sudo apt-get install -y ant && \
 sudo apt-get clean;
 
-export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-1.11.0-openjdk-amd64"
 
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
