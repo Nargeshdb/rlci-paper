@@ -1,12 +1,12 @@
 #!/bin/bash
 
 cd checker-framework
-git checkout master
+git checkout oopsla-2023
 git pull
 ./gradlew assemble
 export PATH=$CHECKERFRAMEWORK/checker/bin:${PATH}
-git checkout oopsla-2023
-git pull
+# git checkout oopsla-2023
+# git pull
 ./gradlew publishToMavenLocal
 cd ..
 
