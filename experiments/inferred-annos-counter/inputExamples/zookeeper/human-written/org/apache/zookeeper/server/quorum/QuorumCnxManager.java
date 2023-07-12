@@ -581,11 +581,12 @@ public class QuorumCnxManager {
     /**
      * Thread to receive connection request from peer server.
      */
+    @InheritableMustCall("finish")
     private class QuorumConnectionReceiverThread extends ZooKeeperThread {
 
         private final Socket sock;
         @SuppressWarnings("objectconstruction:required.method.not.called") // FP application invariant: this is a thread, which will definitely have run() called upon it. This method takes the socket and puts it in a field temporarily; when run is called, sock is passed to receiveConnection(), which takes ownership. (validated)
-        QuorumConnectionReceiverThread(final @Owning Socket sock) {
+        @MustCallAlias QuorumConnectionReceiverThread(final @MustCallAlias Socket sock) {
             super("QuorumConnectionReceiverThread-" + sock.getRemoteSocketAddress());
             this.sock = sock;
         }

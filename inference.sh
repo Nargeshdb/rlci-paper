@@ -17,8 +17,8 @@ git checkout oopsla-2023
 ./gradlew publishToMavenLocal
 cd ..
 
-JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
-export JAVA_HOME
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
+export PATH="${JAVA_HOME}/bin:{$PATH}"
 
 cd zookeeper
 git checkout oopsla-2023-wpi-enabled
@@ -26,7 +26,7 @@ git pull
 
 ${ZK_CLEAN} &> /dev/null
 echo "Zookeeper starting:"
-sh ./wpi.sh &> "typecheck.out"
+./wpi.sh &> "typecheck.out"
 echo "completed"
 cd ..
 
@@ -36,7 +36,7 @@ git pull
 
 ${HBASE_CLEAN} &> /dev/null
 echo "Hbase starting:"
-sh ./wpi.sh &> "typecheck.out"
+./wpi.sh &> "typecheck.out"
 echo "completed"
 cd ..
 
@@ -46,6 +46,6 @@ git pull
 
 ${HADOOP_CLEAN} &> /dev/null
 echo "Hadoop starting:"
-sh ./wpi.sh &> "typecheck.out"
+./wpi.sh &> "typecheck.out"
 echo "completed"
 cd ..
