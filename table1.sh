@@ -59,12 +59,36 @@ print_result "$zk_ecm" "@EnsuresCalledMethods"
 
 zk_im=$(grep "@InheritableMustCall " ${RUN_IAC_PATH}/zookeeper_count.out)
 
-print_result "$zk_ecm" "@InheritableMustCall"
+print_result "$zk_im" "@InheritableMustCall"
 
 zk_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/zookeeper_count.out)
 
 print_result "$zk_not_owning" "@NotOwning"
 
+echo ""
+echo "Printing result for HADOOP:"
+
+hadoop_ownings=$(grep "@Owning" ${RUN_IAC_PATH}/hadoop_count.out)
+
+print_result "$hadoop_ownings" "@Owning"
+
+hadoop_mca=$(grep "@MustCallAlias" ${RUN_IAC_PATH}/hadoop_count.out)
+
+print_result "$hadoop_mca" "@MustCallAlias"
+
+hadoop_ecm=$(grep "@EnsuresCalledMethods " ${RUN_IAC_PATH}/hadoop_count.out)
+
+print_result "$hadoop_ecm" "@EnsuresCalledMethods"
+
+hadoop_im=$(grep "@InheritableMustCall " ${RUN_IAC_PATH}/hadoop_count.out)
+
+print_result "$hadoop_im" "@InheritableMustCall"
+
+hadoop_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/hadoop_count.out)
+
+print_result "$hadoop_not_owning" "@NotOwning"
+
+echo ""
 
 echo "Printing result for HBASE:"
 
@@ -82,31 +106,9 @@ print_result "$hbase_ecm" "@EnsuresCalledMethods"
 
 hbase_im=$(grep "@InheritableMustCall " ${RUN_IAC_PATH}/hbase_count.out)
 
-print_result "$hbase_ecm" "@InheritableMustCall"
+print_result "$hbase_im" "@InheritableMustCall"
 
 hbase_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/hbase_count.out)
 
 print_result "$hbase_not_owning" "@NotOwning"
-
-echo "Printing result for HADOOP:"
-
-hadoop_ownings=$(grep "@Owning" ${RUN_IAC_PATH}/hbase_count.out)
-
-print_result "$hadoop_ownings" "@Owning"
-
-hadoop_mca=$(grep "@MustCallAlias" ${RUN_IAC_PATH}/hbase_count.out)
-
-print_result "$hadoop_mca" "@MustCallAlias"
-
-hadoop_ecm=$(grep "@EnsuresCalledMethods " ${RUN_IAC_PATH}/hbase_count.out)
-
-print_result "$hadoop_ecm" "@EnsuresCalledMethods"
-
-hadoop_im=$(grep "@InheritableMustCall " ${RUN_IAC_PATH}/hbase_count.out)
-
-print_result "$hadoop_im" "@InheritableMustCall"
-
-hadoop_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/hbase_count.out)
-
-print_result "$hadoop_not_owning" "@NotOwning"
 
