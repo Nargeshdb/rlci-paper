@@ -31,6 +31,7 @@ echo "completed"
 cd ..
 
 cd hbase
+${HBASE_CMD}
 git checkout oopsla-2023-wpi-enabled
 git pull
 
