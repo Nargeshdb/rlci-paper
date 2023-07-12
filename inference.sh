@@ -10,6 +10,7 @@ export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
+echo "Building Checker Framework Locally"
 echo $JAVA_HOME
 git checkout master
 ./gradlew assemble
@@ -17,9 +18,11 @@ git checkout oopsla-2023
 ./gradlew publishToMavenLocal
 cd ..
 
+
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
+echo "Running inference on Zookeeper"
 cd zookeeper
 git checkout oopsla-2023-wpi-enabled
 git pull
@@ -30,6 +33,7 @@ echo "Zookeeper starting:"
 echo "completed"
 cd ..
 
+echo "Running inference on HBase"
 cd hbase
 ${HBASE_CMD}
 git checkout oopsla-2023-wpi-enabled
@@ -41,6 +45,7 @@ echo "Hbase starting:"
 echo "completed"
 cd ..
 
+echo "Running inference on Hadoop"
 cd hadoop
 git checkout oopsla-2023-wpi-enabled
 git pull

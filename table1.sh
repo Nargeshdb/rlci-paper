@@ -38,11 +38,10 @@ print_result() {
     
 }
 
+####################### Running Experiments for ZooKeeper ########################
+
+echo "Running experiments for ZooKeeper"
 bash "${RUN_IAC_PATH}/run-iac.sh" "${ZK_HUMAN_WRITTEN}" "${ZK_GENERATED}" &> "${RUN_IAC_PATH}/zookeeper_count.out"
-bash "${RUN_IAC_PATH}/run-iac.sh" "${HBASE_HUMAN_WRITTEN}" "${HBASE_GENERATED}" &> "${RUN_IAC_PATH}/hbase_count.out"
-bash "${RUN_IAC_PATH}/run-iac.sh" "${HADOOP_HUMAN_WRITTEN}" "${HADOOP_GENERATED}" &> "${RUN_IAC_PATH}/hadoop_count.out"
-
-
 echo "Printing result for ZOOKEEPER:"
 
 zk_ownings=$(grep "@Owning" ${RUN_IAC_PATH}/zookeeper_count.out)
@@ -66,6 +65,13 @@ zk_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/zookeeper_count.out)
 print_result "$zk_not_owning" "@NotOwning"
 
 echo ""
+
+
+####################### Running Experiments for HBase ############################
+
+echo "Running experiments for HBase"
+bash "${RUN_IAC_PATH}/run-iac.sh" "${HBASE_HUMAN_WRITTEN}" "${HBASE_GENERATED}" &> "${RUN_IAC_PATH}/hbase_count.out"
+
 echo "Printing result for HADOOP:"
 
 hadoop_ownings=$(grep "@Owning" ${RUN_IAC_PATH}/hadoop_count.out)
@@ -89,6 +95,11 @@ hadoop_not_owning=$(grep "@NotOwning" ${RUN_IAC_PATH}/hadoop_count.out)
 print_result "$hadoop_not_owning" "@NotOwning"
 
 echo ""
+
+####################### Running Experiments for Hadoop ###########################
+
+echo "Running experiments for Hadoop"
+bash "${RUN_IAC_PATH}/run-iac.sh" "${HADOOP_HUMAN_WRITTEN}" "${HADOOP_GENERATED}" &> "${RUN_IAC_PATH}/hadoop_count.out"
 
 echo "Printing result for HBASE:"
 
