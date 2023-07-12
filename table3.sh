@@ -31,6 +31,7 @@ compute_total_time() {
         elif [[ "$unit" == "min" ]]; then
           minutes=$(echo "$line" | awk -F'[: ]' '{print $1}')
           seconds=$(echo "$line" | awk -F'[: ]' '{print $2}')
+          seconds=$(echo "$seconds" | sed 's/^0*//') # Remove leading zeros
           sum=$(($sum + 10#$minutes * 60))
           sum=$(($sum + $seconds))
         fi
