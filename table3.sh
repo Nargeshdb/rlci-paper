@@ -6,54 +6,79 @@ HBASE_REPO="/home/oopsla/hbase"
 
 HADOOP_REPO="/home/oopsla/hadoop"
 
-print_result() {
+sudo apt-get install bc &> /dev/null
+
+convert_to_minutes() {
+  time="$1"
+
+  local seconds=$((time % 60))
+  local minutes=$((time / 60))
+  echo "Total time is: $minutes:"${seconds%.*}" min"
+}
+
+compute_total_time() {
   grep_result="$1"
 
-  sum_left=0
-  sum_right=0
+  sum=0 # it is in seconds
 
   i=1;
   while read n; do
-    echo "$n"
+      while IFS= read -r line; do
+        unit="$(echo "$line" | awk '{print $NF}')" # get the unit of a line
+
+        if [[ "$unit" == "s" ]]; then
+          sum=$(($sum + ${line%.*}))
+        elif [[ "$unit" == "min" ]]; then
+          minutes=$(echo "$line" | awk -F'[: ]' '{print $1}')
+          seconds=$(echo "$line" | awk -F'[: ]' '{print $2}')
+          sum=$(($sum + 10#$minutes * 60))
+          sum=$(($sum + $seconds))
+        fi
+      done <<< "$n"
+
     i=$(($i+1));
   done <<< "$grep_result"
+
+  convert_to_minutes "$sum"
     
 }
 
 
-echo "Printing inference time for ZOOKEEPER:"
-cd ${ZK_REPO}
-git checkout oopsla-2023-wpi-enabled
-git pull
 
-zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out)
-print_result "$zk_times"
+cd ${ZK_REPO} &> /dev/null
+git checkout oopsla-2023-wpi-enabled &> /dev/null
+git pull &> /dev/null
+
+echo "Printing inference time for ZOOKEEPER:"
+zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+compute_total_time "$zk_times"
 echo ""
 echo "Printing verification time for ZOOKEEPER:"
 echo "TODO"
 
 echo ""
-echo "Printing result for HADOOP:"
 
-cd ${HADOOP_REPO}
-git checkout oopsla-2023-wpi-enabled
-git pull
-hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out)
-print_result "$hadoop_times"
+cd ${HADOOP_REPO} &> /dev/null
+git checkout oopsla-2023-wpi-enabled &> /dev/null
+git pull &> /dev/null
+
+echo "Printing result for HADOOP:"
+hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+compute_total_time "$hadoop_times"
 
 echo ""
-echo "Printing verification time for ZOOKEEPER:"
+echo "Printing verification time for HADOOP:"
 echo "TODO"
 
 echo ""
 echo "Printing result for HBASE:"
 
-cd ${HBASE_REPO}
-git checkout oopsla-2023-wpi-enabled
-git pull
-hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out)
-print_result "$hbase_times"
+cd ${HBASE_REPO} &> /dev/null
+git checkout oopsla-2023-wpi-enabled &> /dev/null
+git pull &> /dev/null
+hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+compute_total_time "$hbase_times"
 
 echo ""
-echo "Printing verification time for ZOOKEEPER:"
+echo "Printing verification time for HBASE:"
 echo "TODO"
