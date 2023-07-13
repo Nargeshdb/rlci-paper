@@ -51,15 +51,15 @@ git checkout oopsla-2023-wpi-enabled &> /dev/null
 git pull &> /dev/null
 
 echo "Printing inference time for ZOOKEEPER:"
-zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+zk_times=$(grep " time: " ${ZK_REPO}/zk_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
 compute_total_time "$zk_times"
 echo ""
 
 git checkout oopsla-2023-verification-time &> /dev/null
 git pull &> /dev/null
 echo "Printing verification time for ZOOKEEPER:"
-zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
-echo "$zk_times"
+zk_times=$(grep " time: " ${ZK_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
+echo "Total time is: $zk_times"
 
 echo ""
 
@@ -67,8 +67,8 @@ cd ${HADOOP_REPO} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
 git pull &> /dev/null
 
-echo "Printing result for HADOOP:"
-hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+echo "Printing inference time for HADOOP:"
+hadoop_times=$(grep " time: " ${HADOOP_REPO}/hadoop_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
 compute_total_time "$hadoop_times"
 
 echo ""
@@ -76,16 +76,16 @@ echo ""
 git checkout oopsla-2023-verification-time &> /dev/null
 git pull &> /dev/null
 echo "Printing verification time for HADOOP:"
-hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
-echo "$hadoop_times"
+hadoop_times=$(grep " time: " ${HADOOP_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
+echo "Total time is: $hadoop_times"
 
 echo ""
-echo "Printing result for HBASE:"
+echo "Printing inference time for HBASE:"
 
 cd ${HBASE_REPO} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
 git pull &> /dev/null
-hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+hbase_times=$(grep " time: " ${HBASE_REPO}/hbase_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
 compute_total_time "$hbase_times"
 
 echo ""
@@ -93,5 +93,5 @@ echo ""
 git checkout oopsla-2023-verification-time &> /dev/null
 git pull &> /dev/null
 echo "Printing verification time for HBASE:"
-hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
-echo "$hbase_times"
+hbase_times=$(grep " time: " ${HBASE_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
+echo "Total time is: $hbase_times"

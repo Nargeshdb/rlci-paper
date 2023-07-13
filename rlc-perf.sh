@@ -11,47 +11,50 @@ export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
 echo "Building Checker Framework Locally"
-echo $JAVA_HOME
-git checkout master
-./gradlew assemble
-git checkout oopsla-2023
-./gradlew publishToMavenLocal
+#echo $JAVA_HOME
+git checkout master &> /dev/null
+./gradlew assemble &> /dev/null
+git checkout oopsla-2023 &> /dev/null
+./gradlew publishToMavenLocal &> /dev/null
 cd ..
 
 
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/"
 export PATH="${JAVA_HOME}/bin:{$PATH}"
 
-echo "Running Resource Leak Checker on Zookeeper"
+
 cd zookeeper
 git checkout oopsla-2023-verification-time &> /dev/null
-git pull
+git pull &> /dev/null
 
 ${ZK_CLEAN} &> /dev/null
-echo "Zookeeper starting:"
-mvn -B --projects zookeeper-server --also-make compile -DskipTests &> "typecheck.out"
+#echo "Zookeeper starting:"
+echo "Running Resource Leak Checker on Zookeeper"
+mvn -B --projects zookeeper-server --also-make compile -DskipTests &> "verification-perf.out"
 echo "completed"
 cd ..
 
-echo "Running Resource Leak Checker on HBase"
-cd hbase
-${HBASE_CMD}
-git checkout oopsla-2023-verification-time &> /dev/null
-git pull
 
-${HBASE_CLEAN} &> /dev/null
-echo "Hbase starting:"
-mvn --projects hbase-server --also-make clean install -DskipTests &> "typecheck.out"
-echo "completed"
-cd ..
-
-echo "Running Resource Leak Checker on Hadoop"
 cd hadoop
 git checkout oopsla-2023-verification-time &> /dev/null
-git pull
+git pull &> /dev/null
 
 ${HADOOP_CLEAN} &> /dev/null
-echo "Hadoop starting:"
-${HBASE_CMD} &> "typecheck.out"
+#echo "Hadoop starting:"
+echo "Running Resource Leak Checker on Hadoop"
+mvn --projects hadoop-hdfs-project/hadoop-hdfs --also-make clean compile -DskipTests &> "verification-perf.out"
+echo "completed"
+cd ..
+
+cd hbase
+git checkout master &> /dev/null
+${HBASE_CMD} &> /dev/null
+git checkout oopsla-2023-verification-time &> /dev/null
+git pull &> /dev/null
+
+${HBASE_CLEAN} &> /dev/null
+#echo "Hbase starting:"
+echo "Running Resource Leak Checker on HBase"
+mvn --projects hbase-server --also-make clean compile -DskipTests &> "verification-perf.out"
 echo "completed"
 cd ..
