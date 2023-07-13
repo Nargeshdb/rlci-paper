@@ -54,8 +54,12 @@ echo "Printing inference time for ZOOKEEPER:"
 zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
 compute_total_time "$zk_times"
 echo ""
+
+git checkout oopsla-2023-verification-time &> /dev/null
+git pull &> /dev/null
 echo "Printing verification time for ZOOKEEPER:"
-echo "TODO"
+zk_times=$(grep " time: " ${ZK_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+echo "$zk_times"
 
 echo ""
 
@@ -68,8 +72,12 @@ hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out | sed "s/.* time: \(.
 compute_total_time "$hadoop_times"
 
 echo ""
+
+git checkout oopsla-2023-verification-time &> /dev/null
+git pull &> /dev/null
 echo "Printing verification time for HADOOP:"
-echo "TODO"
+hadoop_times=$(grep " time: " ${HADOOP_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+echo "$hadoop_times"
 
 echo ""
 echo "Printing result for HBASE:"
@@ -81,5 +89,9 @@ hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out | sed "s/.* time: \(.*\
 compute_total_time "$hbase_times"
 
 echo ""
+
+git checkout oopsla-2023-verification-time &> /dev/null
+git pull &> /dev/null
 echo "Printing verification time for HBASE:"
-echo "TODO"
+hbase_times=$(grep " time: " ${HBASE_REPO}/typecheck.out | sed "s/.* time: \(.*\)/\1/")
+echo "$hbase_times"
