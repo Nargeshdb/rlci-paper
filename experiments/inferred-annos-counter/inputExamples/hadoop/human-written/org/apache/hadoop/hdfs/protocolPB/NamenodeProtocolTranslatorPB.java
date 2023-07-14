@@ -63,7 +63,8 @@ import org.checkerframework.checker.mustcall.qual.InheritableMustCall;
 @InterfaceAudience.Private
 @InterfaceStability.Stable
 @SuppressWarnings("mustcall:inconsistent.mustcall.subtype")
-@InheritableMustCall({})
+//@InheritableMustCall({}) // We don't expect the inference algorithm to infer @InheritableMustCall({}) on classes, so
+// for the purpose of counting scripts we commented this annotaion
 public class NamenodeProtocolTranslatorPB
     implements NamenodeProtocol, ProtocolMetaInterface, Closeable, ProtocolTranslator {
   /** RpcController is not used and hence is set to null */

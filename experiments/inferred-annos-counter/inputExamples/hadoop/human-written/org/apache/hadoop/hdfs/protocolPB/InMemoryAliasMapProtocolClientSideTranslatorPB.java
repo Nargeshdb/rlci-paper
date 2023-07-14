@@ -62,7 +62,8 @@ import org.slf4j.LoggerFactory;
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
 @SuppressWarnings("mustcall:inconsistent.mustcall.subtype")
-@InheritableMustCall({})
+//@InheritableMustCall({}) // We don't expect the inference algorithm to infer @InheritableMustCall({}) on classes, so
+// for the purpose of counting scripts we commented this annotaion
 public class InMemoryAliasMapProtocolClientSideTranslatorPB
     implements InMemoryAliasMapProtocol, Closeable {
 
