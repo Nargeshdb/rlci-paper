@@ -66,11 +66,11 @@ print_result "$zk_not_owning" "@NotOwning"
 
 echo ""
 
+####################### Running Experiments for Hadoop ###########################
 
-####################### Running Experiments for HBase ############################
+echo "Running experiments for Hadoop"
+bash "${RUN_IAC_PATH}/run-iac.sh" "${HADOOP_HUMAN_WRITTEN}" "${HADOOP_GENERATED}" &> "${RUN_IAC_PATH}/hadoop_count.out"
 
-echo "Running experiments for HBase"
-bash "${RUN_IAC_PATH}/run-iac.sh" "${HBASE_HUMAN_WRITTEN}" "${HBASE_GENERATED}" &> "${RUN_IAC_PATH}/hbase_count.out"
 
 echo "Printing result for HADOOP:"
 
@@ -96,10 +96,10 @@ print_result "$hadoop_not_owning" "@NotOwning"
 
 echo ""
 
-####################### Running Experiments for Hadoop ###########################
+####################### Running Experiments for HBase ############################
 
-echo "Running experiments for Hadoop"
-bash "${RUN_IAC_PATH}/run-iac.sh" "${HADOOP_HUMAN_WRITTEN}" "${HADOOP_GENERATED}" &> "${RUN_IAC_PATH}/hadoop_count.out"
+echo "Running experiments for HBase"
+bash "${RUN_IAC_PATH}/run-iac.sh" "${HBASE_HUMAN_WRITTEN}" "${HBASE_GENERATED}" &> "${RUN_IAC_PATH}/hbase_count.out"
 
 echo "Printing result for HBASE:"
 
