@@ -135,7 +135,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
 
   @Override
   @SuppressWarnings("builder:destructor.exceptional.postcondition") // FP if fp is null then fc is also null
-  @EnsuresCalledMethods(value = {"this.fc", "this.fp"}, methods = {"close"})
+  @EnsuresCalledMethods(value = { "this.fp", "this.fc" }, methods = { "close" })
   public void close() throws IOException {
     if (fp == null) {
       throw new IOException("Trying to use aborted output stream");

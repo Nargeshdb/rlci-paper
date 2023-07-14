@@ -317,9 +317,7 @@ public class NameNodeConnector implements Closeable {
   }
 
   @Override
-  @EnsuresCalledMethods(
-      value = {"this.keyManager", "this.out"},
-      methods = {"close"})
+  @EnsuresCalledMethods(value = { "this.out", "this.keyManager" }, methods = { "close" })
   public void close() {
     keyManager.close();
 

@@ -142,9 +142,7 @@ public class ReplicaInputStreams implements Closeable {
   }
 
   @Override
-  @EnsuresCalledMethods(
-      value = {"this.dataIn", "this.checksumIn"},
-      methods = {"close"})
+  @EnsuresCalledMethods(value = { "this.checksumIn", "this.volumeRef", "this.dataIn" }, methods = { "close" })
   public void close() {
     IOUtils.closeStream(dataIn);
     //    dataIn = null;

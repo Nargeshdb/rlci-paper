@@ -261,7 +261,9 @@ public class Journal implements Closeable {
   /** Unlock and release resources. */
   @Override // Closeable
   @SuppressWarnings({"builder:destructor.exceptional.postcondition", "builder:contracts.postcondition"}) // TP: committedTxnId and curSegment remain open in the possible exceptional exit due to storage.close() (validated)
-  @EnsuresCalledMethods(value = {"this.committedTxnId"}, methods = {"close"})
+//  @EnsuresCalledMethods(value = {"this.committedTxnId"}, methods = {"close"}) // We replaced this annotation with the below just
+// for the purpose of using counting scripts
+  @EnsuresCalledMethods(value = { "this.curSegment", "this.committedTxnId" }, methods = { "close" })
   public void close() throws IOException {
     storage.close();
     IOUtils.closeStream(committedTxnId);

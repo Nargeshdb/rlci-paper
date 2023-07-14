@@ -348,9 +348,10 @@ class BlockReceiver implements Closeable {
 
   /** close files and release volume reference. */
   @Override
-  @EnsuresCalledMethods(
-      value = {"this.checksumOut"},
-      methods = {"close"})
+//  @EnsuresCalledMethods(
+//      value = {"this.checksumOut"},
+//      methods = {"close"}) We replaced this annotation with the below just for the purpose of using counting scripts
+  @EnsuresCalledMethods(value = { "this.streams", "this.checksumOut", "this.replicaHandler", "this.packetReceiver" }, methods = { "close" })
   public void close() throws IOException {
     Span span = Tracer.getCurrentSpan();
     if (span != null) {
