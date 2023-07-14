@@ -1392,7 +1392,9 @@ public class QuorumCnxManager {
         }
 
         @Override
-        @EnsuresCalledMethods(value="this.sock", methods="close")
+//        @EnsuresCalledMethods(value="this.sock", methods="close") // We replaced this annotation with the below just
+        // for the purpose of using counting scripts
+        @EnsuresCalledMethods(value = { "this.sock", "this.sw" }, methods = { "finish" })
         public void run() {
             threadCnt.incrementAndGet();
             try {
