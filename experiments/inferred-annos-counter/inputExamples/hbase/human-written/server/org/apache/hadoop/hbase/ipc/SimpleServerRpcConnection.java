@@ -295,7 +295,9 @@ class SimpleServerRpcConnection extends ServerRpcConnection {
   }
 
   @Override
-  @EnsuresCalledMethods(value = {"this.channel"}, methods = "close")
+//  @EnsuresCalledMethods(value = {"this.channel"}, methods = "close") // We replaced this annotation with the below
+//  just for the purpose of using counting scripts
+  @EnsuresCalledMethods(value = { "this.channel", "this.socket" }, methods = { "close" })
   public synchronized void close() {
     disposeSasl();
     data = null;

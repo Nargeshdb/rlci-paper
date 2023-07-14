@@ -163,7 +163,7 @@ public class SimpleRpcServer extends RpcServer {
       }
 
       @Override
-      @EnsuresCalledMethods(value = {"this.readSelector"}, methods = {"close"})
+      @EnsuresCalledMethods(value = { "this.readSelector" }, methods = { "close" })
       public void run() {
         try {
           doRunLoop();
@@ -225,8 +225,7 @@ public class SimpleRpcServer extends RpcServer {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="IS2_INCONSISTENT_SYNC",
       justification="selector access is not synchronized; seems fine but concerned changing " +
         "it will have per impact")
-//    @SuppressWarnings("builder:contracts.postcondition") // TP: if acceptChannel.close() throws an IOException, then selector remains open. (validated)
-    @EnsuresCalledMethods(value = {"this.acceptChannel", "this.selector"}, methods = "close")
+    @EnsuresCalledMethods(value = { "this.acceptChannel", "this.selector" }, methods = { "close" })
     public void run() {
       LOG.info(getName() + ": starting");
       connectionManager.startIdleScan();

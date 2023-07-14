@@ -752,7 +752,9 @@ class BlockingRpcConnection extends RpcConnection implements Runnable {
   }
 
   // just close socket input and output.
-  @EnsuresCalledMethods(value = {"this.socket"}, methods = {"close"})
+//  @EnsuresCalledMethods(value = {"this.socket"}, methods = {"close"}) // We replaced this annotation with the below
+//  just for the purpose of using counting scripts
+  @EnsuresCalledMethods(value = { "this.in", "this.out", "this.socket" }, methods = { "close" })
   private void closeSocket() {
     IOUtils.closeStream(out);
     IOUtils.closeStream(in);
