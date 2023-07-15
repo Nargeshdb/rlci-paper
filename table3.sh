@@ -95,3 +95,6 @@ git pull &> /dev/null
 echo "Printing verification time for HBASE:"
 hbase_times=$(grep " time: " ${HBASE_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
 echo "Total time is: $hbase_times"
+
+echo ""
+echo "Results for table 3 is generated"
