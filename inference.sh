@@ -46,6 +46,7 @@ cd ..
 
 echo "Running inference on HBase"
 cd hbase
+git checkout master  &> /dev/null
 ${HBASE_CMD} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
 git pull &> /dev/null
