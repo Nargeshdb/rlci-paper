@@ -79,9 +79,9 @@ hbase_warnings_no_anno=$(grep -o "The type of object is:" typecheck_no_anno.out 
 git checkout oopsla-2023-using-anno &> /dev/null
 git pull &> /dev/null
 mvn --projects hbase-server --also-make clean compile -DskipTests &> "typecheck_with_anno.out"
-hbase_warnings_no_anno=$(grep -o "builder:missing.\|builder:required.\|builder:mustcallalias\|builder:contracts\|builder:reset.\|mustcall:arg" typecheck_with_anno.out | wc -l)
+hbase_warnings_with_anno=$(grep -o "builder:missing.\|builder:required.\|builder:mustcallalias\|builder:contracts\|builder:reset.\|mustcall:arg" typecheck_with_anno.out | wc -l)
 
 echo "#warnings with no-annotation on hbase: $hbase_warnings_no_anno "
-echo "#warnings with inferred annotation on hbase: $hbase_warnings_no_anno "
+echo "#warnings with inferred annotation on hbase: $hbase_warnings_with_anno "
 echo "completed"
 cd ..
