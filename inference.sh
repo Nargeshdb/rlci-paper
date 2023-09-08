@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sudo apt-get update && \
-sudo apt-get install -y openjdk-11-jdk && \
-sudo apt-get install -y ant && \
-sudo apt-get clean;
+#sudo apt-get update && \
+#sudo apt-get install -y openjdk-11-jdk && \
+#sudo apt-get install -y ant && \
+#sudo apt-get clean;
 
 cd checker-framework
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
@@ -25,7 +25,7 @@ export PATH="${JAVA_HOME}/bin:{$PATH}"
 echo "Running inference on Zookeeper"
 cd zookeeper
 git checkout oopsla-2023-wpi-enabled
-git pull &> /dev/null
+#git pull &> /dev/null
 
 ${ZK_CLEAN} &> /dev/null
 #echo "Zookeeper started:"
@@ -36,7 +36,7 @@ cd ..
 echo "Running inference on Hadoop"
 cd hadoop
 git checkout oopsla-2023-wpi-enabled &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 ${HADOOP_CLEAN} &> /dev/null
 #echo "Hadoop starting:"
@@ -49,7 +49,7 @@ cd hbase
 git checkout master  &> /dev/null
 ${HBASE_CMD} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 ${HBASE_CLEAN} &> /dev/null
 #echo "Hbase starting:"

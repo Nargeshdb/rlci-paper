@@ -27,14 +27,14 @@ echo ""
 echo "Running RLC on Zookeeper"
 cd zookeeper
 git checkout oopsla-2023-no-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 ${ZK_CLEAN} &> /dev/null
 #echo "Zookeeper started:"
 mvn -B --projects zookeeper-server --also-make compile -DskipTests &> "typecheck_no_anno.out"
 zk_warnings_no_anno=$(grep -o "The type of object is:" typecheck_no_anno.out | wc -l)
 git checkout oopsla-2023-using-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 mvn -B --projects zookeeper-server --also-make compile -DskipTests &> "typecheck_with_anno.out"
 zk_warnings_with_anno=$(grep -o "builder:missing.\|builder:required.\|builder:mustcallalias\|builder:contracts\|builder:reset.\|mustcall:arg" typecheck_with_anno.out | wc -l)
 
@@ -48,13 +48,13 @@ echo ""
 echo "Running RLC on Hadoop"
 cd hadoop
 git checkout oopsla-2023-no-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 ${HADOOP_CLEAN} &> /dev/null
 #echo "Hadoop starting:"
 mvn --projects hadoop-hdfs-project/hadoop-hdfs --also-make clean compile -DskipTests &> "typecheck_no_anno.out"
 hadoop_warnings_no_anno=$(grep -o "The type of object is:" typecheck_no_anno.out | wc -l)
 git checkout oopsla-2023-using-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 mvn --projects hadoop-hdfs-project/hadoop-hdfs --also-make clean compile -DskipTests &> "typecheck_with_anno.out"
 hadoop_warnings_with_anno=$(grep -o "builder:missing.\|builder:required.\|builder:mustcallalias\|builder:contracts\|builder:reset.\|mustcall:arg" typecheck_with_anno.out | wc -l)
 
@@ -70,14 +70,14 @@ cd hbase
 git checkout master  &> /dev/null
 ${HBASE_CMD} &> /dev/null
 git checkout oopsla-2023-no-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 ${HBASE_CLEAN} &> /dev/null
 #echo "Hbase starting:"
 mvn --projects hbase-server --also-make clean compile -DskipTests &> "typecheck_no_anno.out"
 hbase_warnings_no_anno=$(grep -o "The type of object is:" typecheck_no_anno.out | wc -l)
 git checkout oopsla-2023-using-anno &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 mvn --projects hbase-server --also-make clean compile -DskipTests &> "typecheck_with_anno.out"
 hbase_warnings_with_anno=$(grep -o "builder:missing.\|builder:required.\|builder:mustcallalias\|builder:contracts\|builder:reset.\|mustcall:arg" typecheck_with_anno.out | wc -l)
 

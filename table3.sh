@@ -6,7 +6,7 @@ HBASE_REPO="/home/oopsla/hbase"
 
 HADOOP_REPO="/home/oopsla/hadoop"
 
-sudo apt-get install bc &> /dev/null
+#sudo apt-get install bc &> /dev/null
 
 convert_to_minutes() {
   time="$1"
@@ -65,7 +65,7 @@ echo ""
 
 cd ${HADOOP_REPO} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 echo "Printing inference time for HADOOP:"
 hadoop_times=$(grep " time: " ${HADOOP_REPO}/hadoop_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
@@ -74,7 +74,7 @@ compute_total_time "$hadoop_times"
 echo ""
 
 git checkout oopsla-2023-verification-time &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 echo "Printing verification time for HADOOP:"
 hadoop_times=$(grep " time: " ${HADOOP_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
 echo "Total time is: $hadoop_times"
@@ -84,14 +84,14 @@ echo "Printing inference time for HBASE:"
 
 cd ${HBASE_REPO} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 hbase_times=$(grep " time: " ${HBASE_REPO}/hbase_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
 compute_total_time "$hbase_times"
 
 echo ""
 
 git checkout oopsla-2023-verification-time &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 echo "Printing verification time for HBASE:"
 hbase_times=$(grep " time: " ${HBASE_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
 echo "Total time is: $hbase_times"
