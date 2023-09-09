@@ -12,7 +12,7 @@ export PATH="${JAVA_HOME}/bin:{$PATH}"
 
 echo "Building Checker Framework Locally"
 #echo $JAVA_HOME
-git checkout master &> /dev/null
+git checkout checkout oopsla-2023 &> /dev/null
 ./gradlew assemble &> /dev/null
 git checkout oopsla-2023 &> /dev/null
 ./gradlew publishToMavenLocal &> /dev/null
