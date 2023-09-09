@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sudo apt-get update && \
-sudo apt-get install -y openjdk-11-jdk && \
-sudo apt-get install -y ant && \
-sudo apt-get clean;
+#sudo apt-get update && \
+#sudo apt-get install -y openjdk-11-jdk && \
+#sudo apt-get install -y ant && \
+#sudo apt-get clean;
 
 cd checker-framework
 export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
