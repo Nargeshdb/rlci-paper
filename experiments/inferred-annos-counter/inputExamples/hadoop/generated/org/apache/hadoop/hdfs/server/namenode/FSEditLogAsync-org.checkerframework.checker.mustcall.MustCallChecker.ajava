@@ -160,8 +160,8 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
         }
 
         // while draining, count the releases until release(int)
-        private void tryRelease(int permits) {
-            pendingReleases.getAndAdd(permits);
+        private void tryRelease(int prmits) {
+            pendingReleases.getAndAdd(prmits);
             if (!draining.get()) {
                 super.release(pendingReleases.getAndSet(0));
             }
@@ -171,9 +171,9 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
             tryRelease(1);
         }
 
-        public void release(int permits) {
+        public void release(int prmits) {
             draining.set(false);
-            tryRelease(permits);
+            tryRelease(prmits);
         }
     };
 
@@ -191,14 +191,14 @@ class FSEditLogAsync extends FSEditLog implements Runnable {
                     // if queue is full, synchronized caller must immediately relinquish
                     // the monitor before re-offering to avoid deadlock with sync thread
                     // which needs the monitor to write transactions.
-                    int permits = overflowMutex.drainPermits();
+                    int prmits = overflowMutex.drainPermits();
                     try {
                         do {
                             // will be notified by next logSync.
                             this.wait(1000);
                         } while (!editPendingQ.offer(edit));
                     } finally {
-                        overflowMutex.release(permits);
+                        overflowMutex.release(prmits);
                     }
                 } else {
                     // mutex will throttle contention during persistent overflow.

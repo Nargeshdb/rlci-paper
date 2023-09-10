@@ -48,7 +48,7 @@ compute_total_time() {
 
 cd ${ZK_REPO} &> /dev/null
 git checkout oopsla-2023-wpi-enabled &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 
 echo "Printing inference time for ZOOKEEPER:"
 zk_times=$(grep " time: " ${ZK_REPO}/zk_inf_typecheck.out | sed "s/.* time: \(.*\)/\1/")
@@ -56,7 +56,7 @@ compute_total_time "$zk_times"
 echo ""
 
 git checkout oopsla-2023-verification-time &> /dev/null
-git pull &> /dev/null
+#git pull &> /dev/null
 echo "Printing verification time for ZOOKEEPER:"
 zk_times=$(grep " time: " ${ZK_REPO}/verification-perf.out | sed "s/.* time: \(.*\)/\1/")
 echo "Total time is: $zk_times"
